@@ -9,7 +9,7 @@ defmodule ElixirAuthGoogle do
   @default_scope "profile email"
   @default_callback_path "/auth/google/callback"
 
-  @httpoison (Application.compile_env(:elixir_auth_google, :httpoison_mock) &&
+  @httpoison (Application.get_env(:elixir_auth_google, :httpoison_mock) &&
                 ElixirAuthGoogle.HTTPoisonMock) || HTTPoison
 
   @type conn :: map
@@ -100,6 +100,8 @@ defmodule ElixirAuthGoogle do
   @spec get_user_profile(String.t()) :: {:ok, map} | {:error, any}
   def get_user_profile(token) do
     params = URI.encode_query(%{access_token: token}, :rfc3986)
+
+    IO.inspect(inject_poison(), label: "inject_poison")
 
     "#{@google_user_profile}?#{params}"
     |> inject_poison().get()
