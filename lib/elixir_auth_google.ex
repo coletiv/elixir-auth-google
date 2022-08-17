@@ -8,8 +8,13 @@ defmodule ElixirAuthGoogle do
   @google_user_profile "https://www.googleapis.com/oauth2/v3/userinfo"
   @default_scope "profile email"
   @default_callback_path "/auth/google/callback"
+  @default_use_httpoison_mock false
 
-  @httpoison (Application.compile_env(:elixir_auth_google, :httpoison_mock) &&
+  @httpoison (Application.get_env(
+                :elixir_auth_google,
+                :httpoison_mock,
+                @default_use_httpoison_mock
+              ) &&
                 ElixirAuthGoogle.HTTPoisonMock) || HTTPoison
 
   @type conn :: map
